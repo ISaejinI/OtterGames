@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Tournoi : {{ tournoi.nom }}</h2>
+    <p>Nombre de match : {{ nbr_matchs }} </p>
+
+    {% comment %} <div style="text-align:start">
+        <p>Date et heure de lancement du tournoi : {{ tournoi.heure_lancement }}</p>
+
+        <p>{{ loutre1.nom }} de {{ loutre1.village }} affronte {{ loutre2.nom }} de {{ loutre2.village }} dans un match de {{ tournoi.categorie }}</p>
+
+        <div>
+            <form>
+                <ul>
+                    <li>
+                        {{ loutre1.nom }} {{ loutre1.prenom }} de {{ loutre1.village }}
+                        {% if user.is_authenticated %}
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre1.pk }}">Parier</button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
+                    </li> 
+                    <li>
+                        {{ loutre2.nom }} {{ loutre2.prenom }} de {{ loutre2.village }}
+                        {% if user.is_authenticated %}
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre2.pk }}">Parier</button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div> {% endcomment %}
+{% endblock content %}
