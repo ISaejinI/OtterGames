@@ -15,7 +15,7 @@
                     <li>
                         {{ loutre1.nom }} {{ loutre1.prenom }} de {{ loutre1.village }}
                         {% if user.is_authenticated %}
-                            <button type="submit" name="loutre_gagante" value="{{ match.loutre1.id }}">Parier</button>
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre1.pk }}">Parier</button>
                         {% else %}
                             <a href="{% url "signup" %}">Se connecter pour parier</a>
                         {% endif %}
@@ -23,7 +23,7 @@
                     <li>
                         {{ loutre2.nom }} {{ loutre2.prenom }} de {{ loutre2.village }}
                         {% if user.is_authenticated %}
-                            <button type="submit" name="loutre_gagante" value="{{ match.loutre2.id }}">Parier</button>
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre2.pk }}">Parier</button>
                         {% else %}
                             <a href="{% url "signup" %}">Se connecter pour parier</a>
                         {% endif %}

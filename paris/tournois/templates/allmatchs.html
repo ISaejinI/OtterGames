@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+{% for match in matchs %}
+    <li>
+        {{ match.heure_lancement }}
+        <ul>
+            <li>Pk : {{match.pk}}</li>
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock content %}

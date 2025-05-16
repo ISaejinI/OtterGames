@@ -1,6 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Match, Tournoi, Loutre, Pari
 
+def allmatchs_page(request):
+    matchs = Match.objects.all()
+
+    return render(request, 'allmatchs.html', {'matchs': matchs})
+
 def match_page(request, match_id):
     match = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = match.tournoi_id)
@@ -9,6 +14,7 @@ def match_page(request, match_id):
 
     if request.method == 'POST':
         loutre_id = request.POST.get('loutre_gagante')
+        print(loutre_id)
         loutre_misee = get_object_or_404(Loutre, id=loutre_id)
 
         # Crée ou update le pari pour ce user & match
@@ -20,6 +26,7 @@ def match_page(request, match_id):
 
         if not created:
             pari.loutre_misee = loutre_misee
+            print(loutre_id)
             pari.save()
 
         # Directement vérifier si le pari est bon
