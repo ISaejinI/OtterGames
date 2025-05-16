@@ -11,7 +11,7 @@
         </tr>
         {% for user in classement %}
             <tr>
-                <td> { nbBase++ } </td>
+                <td> {{ forloop.counter }} </td>
                 <td> {{ user.username }} </td>
                 <td> {{ user.recompense }} </td>
             </tr>

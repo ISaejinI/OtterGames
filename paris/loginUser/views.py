@@ -48,7 +48,7 @@ def home_page(request):
 def leaderboard_page(request):
     competiteurs = customUser.objects.all().order_by("-recompense")
 
-    return render(request, 'leaderboard.html', context={'classement': competiteurs, 'nbBase': 0})
+    return render(request, 'leaderboard.html', context={'classement': competiteurs})
 
 
 def rules_page(request):
