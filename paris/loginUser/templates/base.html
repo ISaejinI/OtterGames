@@ -8,22 +8,59 @@
 		<link rel="stylesheet" href={% static "css/main.css" %} />
 	</head>
     
-    <body>
-        <header>
-            <h1><a href="{% url "home" %}">Otter Games</a></h1>
-            <nav>
-                <a href="{% url 'login' %}">Connexion</a>
-                {% if user.is_authenticated %}
-                    <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
-                    <a href="{% url "profil" %}">Mon profil</a>
-                {% endif %}
-                <a href="{% url "signup" %}">Inscription</a>
-            </nav>
+    <body class="is-preload">
+        <header id="header">
+            <div class="top">
+                <div id="logo">
+                    <span class="image avatar48"><img src="{% static "images/logoOG.png" %}" alt="" /></span>
+                    <h1 id="title"><a href="{% url "home" %}">Otter Games</a></h1>
+                    {% if user.is_authenticated %}
+                        <p>{{ request.user.first_name }} {{ request.user.last_name }}</p>
+                    {% endif %}
+                </div>
+                <nav id="nav">
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url "profil" %}">Mon profil</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Connexion</a></li>
+                            <li><a href="{% url "signup" %}">Inscription</a></li>    
+                        {% endif %}
+
+                    </ul>   
+                </nav>
+            </div>
+
+           	<div class="bottom">
+                <ul class="icons">
+                    {% if user.is_authenticated %}
+                        <li><a style="width:100%" href="{% url 'logout' %}">Se déconnecter</a></li>
+                    {% endif %}
+                </ul>
+			</div> 
         </header>
 
-        <section>
-            {% block content %}
-            {% endblock %}
-        </section>
+        <div id="main">
+            <section>
+                <div class="container">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </section>
+        </div>
+
+        <footer id="footer">
+            <ul class="copyright">
+				<li>&copy; OtterGames. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+        </footer>
+
+        <script src="{% static "js/jquery.min.js" %}"></script>
+        <script src="{% static "js/jquery.scrolly.min.js" %}"></script>
+        <script src="{% static "js/jquery.scrollex.min.js" %}"></script>
+        <script src="{% static "js/browser.min.js" %}"></script>
+        <script src="{% static "js/breakpoints.min.js" %}"></script>
+        <script src="{% static "js/util.js" %}"></script>
+        <script src="{% static "js/main.js" %}"></script>
     </body>
 </html>
