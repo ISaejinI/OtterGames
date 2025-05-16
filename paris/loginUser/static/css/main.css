@@ -1939,6 +1939,7 @@ input, select, textarea {
 	input[type="button"],
 	input[type="submit"],
 	input[type="reset"],
+	.bouton-a,
 	button,
 	.button {
 		position: relative;
