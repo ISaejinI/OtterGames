@@ -14,6 +14,7 @@ def alltournois_page(request):
 def tournoi_page(request, tournoi_id):
     tournoi = Tournoi.objects.get(pk = tournoi_id)
     matchs = Match.objects.all().filter(tournoi_id = tournoi.pk)
+
     nbr_matchs = len(matchs)
 
     return render(request, 'tournoi.html', {'tournoi': tournoi,'matchs': matchs, 'nbr_matchs': nbr_matchs})

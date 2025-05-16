@@ -2,34 +2,38 @@
 
 {% block content %}
     <h2>Tournoi : {{ tournoi.nom }}</h2>
-    <p>Nombre de match : {{ nbr_matchs }} </p>
+    <p>Nombre de matchs : {{ nbr_matchs }}</p>
 
-    {% comment %} <div style="text-align:start">
-        <p>Date et heure de lancement du tournoi : {{ tournoi.heure_lancement }}</p>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        {% for match in matchs %}
+            <div style="display: flex; flex-direction: column; border-radius: 10px; padding: 15px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                
+                <h3 style="text-align: center;">Match {{ match.niveau }} - {{ match.numero_match }}</h3>
+                <p style="text-align: center;"><strong>Heure :</strong> {{ match.heure_lancement }}</p>
 
-        <p>{{ loutre1.nom }} de {{ loutre1.village }} affronte {{ loutre2.nom }} de {{ loutre2.village }} dans un match de {{ tournoi.categorie }}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+                    <div style="flex: 1; text-align: center;">
+                        <strong>{{ match.loutre1 }}</strong>
+                    </div>
+                    <div style="flex: 0; font-size: 24px; font-weight: bold;">VS</div>
+                    <div style="flex: 1; text-align: center;">
+                        <strong>{{ match.loutre2 }}</strong>
+                    </div>
+                </div>
 
-        <div>
-            <form>
-                <ul>
-                    <li>
-                        {{ loutre1.nom }} {{ loutre1.prenom }} de {{ loutre1.village }}
-                        {% if user.is_authenticated %}
-                            <button type="submit" name="loutre_gagante" value="{{ match.loutre1.pk }}">Parier</button>
-                        {% else %}
-                            <a href="{% url "signup" %}">Se connecter pour parier</a>
-                        {% endif %}
-                    </li> 
-                    <li>
-                        {{ loutre2.nom }} {{ loutre2.prenom }} de {{ loutre2.village }}
-                        {% if user.is_authenticated %}
-                            <button type="submit" name="loutre_gagante" value="{{ match.loutre2.pk }}">Parier</button>
-                        {% else %}
-                            <a href="{% url "signup" %}">Se connecter pour parier</a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </form>
-        </div>
-    </div> {% endcomment %}
+                <p style="text-align: center;"><strong>Vainqueur :</strong>
+                    {% if match.vainqueur %}
+                        {{ match.vainqueur }}
+                    {% else %}
+                        <em>À venir</em>
+                    {% endif %}
+                </p>
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="{% url 'match' match.pk %}" style="padding: 10px 20px; background-color: #5B42F3; color: white; text-decoration: none; border-radius: 5px;">Voir le match</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
