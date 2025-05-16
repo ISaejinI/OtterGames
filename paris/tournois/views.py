@@ -6,6 +6,19 @@ def allmatchs_page(request):
 
     return render(request, 'allmatchs.html', {'matchs': matchs})
 
+def alltournois_page(request):
+    tournois = Tournoi.objects.all()
+
+    return render(request, 'alltournois.html', {'tournois': tournois})
+
+def tournoi_page(request, tournoi_id):
+    tournoi = Tournoi.objects.get(pk = tournoi_id)
+    matchs = Match.objects.all().filter(tournoi_id = tournoi.pk)
+    nbr_matchs = len(matchs)
+
+    return render(request, 'tournoi.html', {'tournoi': tournoi,'matchs': matchs, 'nbr_matchs': nbr_matchs})
+
+
 def match_page(request, match_id):
     match = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = match.tournoi_id)
@@ -43,3 +56,5 @@ def match_page(request, match_id):
         return redirect('detail_match', match_id=match.id)
 
     return render(request, 'match.html', {'match': match, 'tournoi': tournoi, 'loutre1': loutre1, 'loutre2': loutre2})
+
+

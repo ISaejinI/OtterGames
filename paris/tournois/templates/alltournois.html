@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+{% for tournoi in tournois %}
+    <li>
+        {{ tournoi.heure_lancement }}
+        <ul>
+            <li>Pk : {{tournoi.pk}}</li>
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock content %}
