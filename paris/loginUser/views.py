@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from . import forms
+# from .models import customUser
 
 def login_page(request):
     form = forms.LoginForm()
@@ -39,6 +40,8 @@ def signup_page(request):
 
 
 def home_page(request):
+    # competiteurs = list()
+
     return render(request, 'home.html')
 
 

@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Page de profil</h1>
+    <h2>Mon profil</h2>
+
+    <div style="text-align: start">
+        <h3>Mes points :</h3>
+        <p>{{ request.user.recompense }} points</p>
+
+        <h3>Mon classement :</h3>
+        <p>3ème</p>
+    </div>
 {% endblock content %}
