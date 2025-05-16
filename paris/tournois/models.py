@@ -1,4 +1,5 @@
 from django.db import models
+from loginUser.models import customUser
 
 # Loutres participantes
 class Loutre(models.Model):
@@ -41,7 +42,7 @@ class Match(models.Model):
 
 # Paris des utilisateurs (simplifié sans user)
 class Pari(models.Model):
-    pseudo = models.CharField(max_length=100, help_text="Pseudo de l'utilisateur qui parie (temporaire)")
+    user = models.ForeignKey(customUser, related_name='userId', on_delete=models.CASCADE)
     match = models.ForeignKey(Match, related_name='paris', on_delete=models.CASCADE)
     loutre_misee = models.ForeignKey(Loutre, on_delete=models.CASCADE)
     resultat = models.BooleanField(null=True, blank=True, help_text="True = gagné, False = perdu, Null = pas encore terminé")
