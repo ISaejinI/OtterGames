@@ -57,4 +57,14 @@ def rules_page(request):
 
 @login_required
 def userAccount(request):
-    return render(request, 'profil.html')
+    competiteurs = customUser.objects.all().order_by("-recompense")
+    totalComp = len(competiteurs)
+    currentUser = request.user.pk
+    place = 0
+
+    for comp in competiteurs:
+        place = place+1
+        if comp.pk == currentUser:
+            break
+
+    return render(request, 'profil.html', context={'totalComp': totalComp, 'place': place})
