@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h2>Liste des Tournois</h2>
 
-<ul>
-{% for tournoi in tournois %}
-    <li>
-        {{ tournoi.heure_lancement }}
-        <ul>
-            <li>Pk : {{tournoi.pk}}</li>
-        </ul>
-    </li>
-{% endfor %}
-</ul>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        {% for tournoi in tournois %}
+            <div style="border-radius: 10px; padding: 15px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s; background-color: #ffffff;">
+                
+                <h3 style="text-align: center;">{{ tournoi.nom }}</h3>
+                <p style="text-align: center;"><strong>Heure de lancement :</strong> {{ tournoi.heure_lancement }}</p>
 
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="{% url 'tournoi' tournoi.pk %}" style="padding: 10px 20px; background-color: #5B42F3; color: white; text-decoration: none; border-radius: 5px;">Voir plus</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
