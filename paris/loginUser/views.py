@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from . import forms
-# from .models import customUser
+from .models import customUser
 
 def login_page(request):
     form = forms.LoginForm()
@@ -43,6 +43,16 @@ def home_page(request):
     # competiteurs = list()
 
     return render(request, 'home.html')
+
+
+def leaderboard_page(request):
+    competiteurs = customUser.objects.all().order_by("-recompense")
+
+    return render(request, 'leaderboard.html', context={'classement': competiteurs, 'nbBase': 0})
+
+
+def rules_page(request):
+    return render(request, 'rules.html')
 
 
 @login_required

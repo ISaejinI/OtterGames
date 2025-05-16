@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Classement</h1>
+
+    <table>
+        <tr>
+            <th>Classement</th>
+            <th>Nom d'utilisateur</th>
+            <th>Nombre de points</th>
+        </tr>
+        {% for user in classement %}
+            <tr>
+                <td> { nbBase++ } </td>
+                <td> {{ user.username }} </td>
+                <td> {{ user.recompense }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
