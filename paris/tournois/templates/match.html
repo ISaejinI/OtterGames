@@ -5,6 +5,31 @@
     <p>Match : {{ match.niveau }} - {{ match.numero_match }}</p>
 
     <div style="text-align:start">
-        <p>Heure de lancement du match : {{ match.heure_lancment }}</p>
+        <p>Date et heure de lancement du match : {{ match.heure_lancement }}</p>
+
+        <p>{{ loutre1.nom }} de {{ loutre1.village }} affronte {{ loutre2.nom }} de {{ loutre2.village }} dans un match de {{ tournoi.categorie }}</p>
+
+        <div>
+            <form>
+                <ul>
+                    <li>
+                        {{ loutre1.nom }} {{ loutre1.prenom }} de {{ loutre1.village }}
+                        {% if user.is_authenticated %}
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre1.id }}">Parier</button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
+                    </li> 
+                    <li>
+                        {{ loutre2.nom }} {{ loutre2.prenom }} de {{ loutre2.village }}
+                        {% if user.is_authenticated %}
+                            <button type="submit" name="loutre_gagante" value="{{ match.loutre2.id }}">Parier</button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </form>
+        </div>
     </div>
 {% endblock content %}
