@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Page du match : {{ match.niveau }}</h2>
+    <h2>Tournoi : {{ tournoi.nom }}</h2>
+    <p>Match : {{ match.niveau }} - {{ match.numero_match }}</p>
+
+    <div style="text-align:start">
+        <p>Heure de lancement du match : {{ match.heure_lancment }}</p>
+    </div>
 {% endblock content %}
