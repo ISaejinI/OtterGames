@@ -11,6 +11,14 @@
     <body>
         <header>
             <h1>Otter Games</h1>
+            <nav>
+                <a href="{% url 'login' %}">Connexion</a>
+                {% if user.is_authenticated %}
+                    <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
+                    <a href="{% url "profil" %}">Mon profil</a>
+                {% endif %}
+                <a href="/auth/register/">Inscription</a>
+            </nav>
         </header>
 
         <section>
@@ -19,3 +27,8 @@
         </section>
     </body>
 </html>
+
+
+
+
+
