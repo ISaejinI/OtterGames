@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django import forms
 from .models import Loutre, Tournoi, Match, Pari
+from django.db.models import Max
 from datetime import timedelta
 import random
 import math
@@ -33,6 +34,7 @@ class TournoiAdmin(admin.ModelAdmin): # utilise tournoiAdmin comme formulaire
         if not change:  # Si c'est une création de tournoi
             nb_participants = int(form.cleaned_data.get('nb_participants') or 8) # récupère le nombre de participants que l'on a renseigné dans le formulaire
             self._creer_arbre_matches(request, obj, nb_participants) # on appelle la méthode pour créer un arbre de matches
+            self._propager_vainqueurs(obj) # on appelle la méthode pour créer un arbre de matches
 
     def _creer_arbre_matches(self, request, tournoi, nb_participants): # méthode pour créer l'arbre des matches
         loutres = list(Loutre.objects.all()) # récupère toutes les loutres de la base de donnés et la transforme en list python
@@ -68,6 +70,35 @@ class TournoiAdmin(admin.ModelAdmin): # utilise tournoiAdmin comme formulaire
                 heure_depart += timedelta(minutes=1)
 
             matchs_par_niveau //= 2 # on divise le nombre de match par deux à chaque niveau
+            
+    def _propager_vainqueurs(self, tournoi):
+        nb_niveaux = Match.objects.filter(tournoi=tournoi).aggregate(max_niveau=Max('niveau'))['max_niveau'] # cherche tout les matchs du tournois et trouve la profondeur max (exemple : 3)
+
+        for niveau in range(nb_niveaux, 0, -1):
+            matchs = Match.objects.filter(tournoi=tournoi, niveau=niveau).order_by('numero_match') # cherche tout les matchs de ce tournoi qui sont au même niveau (exemple: 3 ou 2)
+
+            for match in matchs: # on passe sur chaque match
+                if match.loutre1 and match.loutre2: # si il y a bien les 2 loutres dans le match (pas vide)
+                    vainqueur = random.choice([match.loutre1, match.loutre2]) # prend une loutre aléatoriement
+                    match.vainqueur = vainqueur
+                    match.save() # sauvegarde dans la bdd
+                else:
+                    continue
+
+                if niveau > 1: # si ce n'est pas la final
+                    numero_match_suivant = (match.numero_match + 1) // 2 # division entière les match 3-1 et 3-2 vont dans le match 2-1 etc... pour les autres
+                    match_suivant = Match.objects.get( # récupère le match qui va accueillir le vainqueur
+                        tournoi=tournoi,
+                        niveau=niveau - 1, # descend d'un niveau
+                        numero_match=numero_match_suivant # met le nouveau numero de match pour trouver le bon
+                    )
+
+                    if not match_suivant.loutre1: # si il n'y a pas déjà au moins une loutre dans le prochain match
+                        match_suivant.loutre1 = vainqueur # on la rajoute dans la loutre1 du prochain match
+                    elif not match_suivant.loutre2: # sinon si il n'y a pas déjà une deuxième loutre dans le prochain match
+                        match_suivant.loutre2 = vainqueur # on la rajoute dans la loutre2 du prochain match
+
+                    match_suivant.save() # on sauvegarde le match avec ses nouvelles loutre qui vont s'affronter
 
 @admin.register(Loutre)
 class LoutreAdmin(admin.ModelAdmin):
