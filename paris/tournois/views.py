@@ -51,6 +51,7 @@ def register_bet_page(request, tournoi_id, match_id, loutre_id):
     currentMatch = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = tournoi_id)
     loutremisee = Loutre.objects.get(pk = loutre_id)
+    messageResultat = ''
     currentTime = timezone.now()
 
     if currentTime > currentMatch.heure_lancement:
