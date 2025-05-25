@@ -6,10 +6,10 @@
 
     <div style="text-align:start">
         <p>Date et heure de lancement du match : {{ match.heure_lancement }}</p>
-        {% if match.heure_lancement < currentTime %}
+        {% if timePassed %}
             <p>Vainqueur : {{ match.vainqueur }}</p>
         {% else %}
-            <p>Rien à voir ici</p>
+            <p>Le vainqueur sera annoncé à la fin du match</p>
         {% endif %}
 
         <p>{{ match.loutre1 }} de {{ match.loutre1.village }} affronte {{ match.loutre2.nom }} de {{ match.loutre2.village }} dans un match de {{ tournoi.categorie }}</p>
@@ -20,18 +20,23 @@
             <ul>
                 <li>
                     {{ match.loutre1.nom }} {{ match.loutre1.prenom }} de {{ match.loutre1.village }}
-                    {% if user.is_authenticated %}
-                        <button><a href="{% url 'registerbet' tournoi.pk match.pk match.loutre1.pk %}">Parier</a></button>
-                    {% else %}
-                        <a href="{% url "signup" %}">Se connecter pour parier</a>
+                    {% if not timePassed %}
+                        {% if user.is_authenticated %}
+                            <button><a href="{% url 'registerbet' tournoi.pk match.pk match.loutre1.pk %}">Parier</a></button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
                     {% endif %}
+
                 </li> 
                 <li>
                     {{ match.loutre2.nom }} {{ match.loutre2.prenom }} de {{ match.loutre2.village }}
-                    {% if user.is_authenticated %}
-                        <button><a href="{% url 'registerbet' tournoi.pk match.pk match.loutre2.pk %}">Parier</a></button>
-                    {% else %}
-                        <a href="{% url "signup" %}">Se connecter pour parier</a>
+                    {% if not timePassed %}
+                        {% if user.is_authenticated %}
+                            <button><a href="{% url 'registerbet' tournoi.pk match.pk match.loutre2.pk %}">Parier</a></button>
+                        {% else %}
+                            <a href="{% url "signup" %}">Se connecter pour parier</a>
+                        {% endif %}
                     {% endif %}
                 </li>
             </ul>

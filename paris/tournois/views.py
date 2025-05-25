@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Match, Tournoi, Loutre, Pari
+from django.utils import timezone
 import datetime
 
 def allmatchs_page(request):
@@ -24,40 +25,62 @@ def tournoi_page(request, tournoi_id):
 def match_page(request, match_id):
     match = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = match.tournoi_id)
-    currentTime = datetime.datetime.now()
+    currentTime = timezone.now()
 
-    return render(request, 'match.html', {'match': match, 'message':'', 'tournoi': tournoi, 'currentTime':currentTime})
+    if currentTime > match.heure_lancement:
+        timePassed = True
+    else:
+        timePassed = False
+
+    return render(request, 'match.html', {'match': match, 'message':'', 'tournoi': tournoi, 'timePassed':timePassed})
 
 
 def register_bet_page(request, tournoi_id, match_id, loutre_id):
     currentMatch = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = tournoi_id)
     loutremisee = Loutre.objects.get(pk = loutre_id)
-    currentTime = datetime.datetime.now()
+    currentTime = timezone.now()
 
-    currentBet = Pari.objects.get(user = request.user, match = currentMatch)
+    if currentTime > currentMatch.heure_lancement:
+        timePassed = True
+    else:
+        timePassed = False
     
     if request.user.is_authenticated:
+        currentBet = Pari.objects.filter(user = request.user, match = currentMatch).first()
         if currentBet:
             message = "Vous avez déjà parié sur une loutre sur ce match"
+
+            if currentMatch.vainqueur == currentBet.loutre_misee:
+                messageResultat = "vous avez gagné"
+            else:
+                messageResultat = "Vous avez perdu"
         
         else:
-            bet = Pari()
+            if currentMatch.heure_lancement < currentTime:
+                bet = Pari()
 
-            bet.user = request.user
-            bet.match = currentMatch
-            bet.loutre_misee = loutremisee
+                bet.user = request.user
+                bet.match = currentMatch
+                bet.loutre_misee = loutremisee
 
-            bet.save()
-            message = "Pari enregistré"
+                bet.save()
+                message = "Pari enregistré"
+
+
+                if currentMatch.vainqueur == bet.loutre_misee:
+                    messageResultat = "Vous avez gagné"
+
+                    request.user.recompense += 10
+                    request.user.save()
+
+                else:
+                    messageResultat = "Vous avez perdu"
+            
+            else:
+                message = "Vous ne pouvez pas parier sur un match déjà passé"
     
     else:
         message = "Il faut être connecté pour parier"
 
-    if currentMatch.vainqueur == bet.loutre_misee:
-        message = "vous avez gagné"
-    else:
-        message = "Vous avez perdu"
-    
-
-    return render(request, 'match.html', {'match': currentMatch, 'message':message, 'tournoi': tournoi, 'currentTime':currentTime})
+    return render(request, 'match.html', {'match': currentMatch, 'message':message, 'tournoi': tournoi, 'timePassed':timePassed})
