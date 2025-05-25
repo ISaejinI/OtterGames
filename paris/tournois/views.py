@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Match, Tournoi, Loutre, Pari
+import datetime
 
 def allmatchs_page(request):
     matchs = Match.objects.all()
@@ -23,39 +24,40 @@ def tournoi_page(request, tournoi_id):
 def match_page(request, match_id):
     match = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = match.tournoi_id)
-    loutre1 = Loutre.objects.get(pk = match.loutre1_id)
-    loutre2 = Loutre.objects.get(pk = match.loutre2_id)
+    currentTime = datetime.datetime.now()
 
-    if request.method == 'POST':
-        loutre_id = request.POST.get('loutre_gagante')
-        print(loutre_id)
-        loutre_misee = get_object_or_404(Loutre, id=loutre_id)
-
-        # Crée ou update le pari pour ce user & match
-        pari, created = Pari.objects.get_or_create(
-            user=request.user,
-            match=match,
-            defaults={'loutre_misee': loutre_misee}
-        )
-
-        if not created:
-            pari.loutre_misee = loutre_misee
-            print(loutre_id)
-            pari.save()
-
-        # Directement vérifier si le pari est bon
-        if match.vainqueur:
-            if pari.loutre_misee == match.vainqueur:
-                pari.resultat = True
-                request.user.recompense += 1
-                request.user.save()
-            else:
-                pari.resultat = False
-
-            pari.save()
-
-        return redirect('detail_match', match_id=match.id)
-
-    return render(request, 'match.html', {'match': match, 'tournoi': tournoi, 'loutre1': loutre1, 'loutre2': loutre2})
+    return render(request, 'match.html', {'match': match, 'message':'', 'tournoi': tournoi, 'currentTime':currentTime})
 
 
+def register_bet_page(request, tournoi_id, match_id, loutre_id):
+    currentMatch = Match.objects.get(pk = match_id)
+    tournoi = Tournoi.objects.get(pk = tournoi_id)
+    loutremisee = Loutre.objects.get(pk = loutre_id)
+    currentTime = datetime.datetime.now()
+
+    currentBet = Pari.objects.get(user = request.user, match = currentMatch)
+    
+    if request.user.is_authenticated:
+        if currentBet:
+            message = "Vous avez déjà parié sur une loutre sur ce match"
+        
+        else:
+            bet = Pari()
+
+            bet.user = request.user
+            bet.match = currentMatch
+            bet.loutre_misee = loutremisee
+
+            bet.save()
+            message = "Pari enregistré"
+    
+    else:
+        message = "Il faut être connecté pour parier"
+
+    if currentMatch.vainqueur == bet.loutre_misee:
+        message = "vous avez gagné"
+    else:
+        message = "Vous avez perdu"
+    
+
+    return render(request, 'match.html', {'match': currentMatch, 'message':message, 'tournoi': tournoi, 'currentTime':currentTime})

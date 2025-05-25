@@ -40,12 +40,11 @@ class Match(models.Model):
         return f"{self.tournoi.nom} - Niveau {self.niveau} - Match {self.numero_match}"
 
 
-# Paris des utilisateurs (simplifié sans user)
+# Paris des utilisateurs
 class Pari(models.Model):
-    user = models.ForeignKey(customUser, related_name='userId', on_delete=models.CASCADE)
+    user = models.ForeignKey(customUser, related_name='userId', on_delete=models.CASCADE, null=False)
     match = models.ForeignKey(Match, related_name='paris', on_delete=models.CASCADE)
     loutre_misee = models.ForeignKey(Loutre, on_delete=models.CASCADE)
-    resultat = models.BooleanField(null=True, blank=True, help_text="True = gagné, False = perdu, Null = pas encore terminé")
-
+    
     def __str__(self):
-        return f"{self.pseudo} a parié sur {self.loutre_misee} (Match {self.match.id})"
+        return f"{self.user} a parié sur {self.loutre_misee} (Match {self.match.id})"

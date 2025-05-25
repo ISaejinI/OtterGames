@@ -40,7 +40,6 @@ def signup_page(request):
 
 
 def home_page(request):
-    # competiteurs = list()
 
     return render(request, 'home.html')
 

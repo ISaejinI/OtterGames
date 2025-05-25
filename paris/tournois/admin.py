@@ -115,6 +115,6 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(Pari)
 class PariAdmin(admin.ModelAdmin):
-    list_display = ('match', 'loutre_misee', 'resultat')
-    list_filter = ('resultat', 'match__tournoi')
+    list_display = ('user', 'match', 'loutre_misee',)
+    list_filter = ('match__tournoi',)
     search_fields = ('match__id',)
