@@ -72,6 +72,26 @@ input, select, textarea {
 	appearance: none;
 }
 
+.messageResultat {
+	background-color: lightcyan !important;
+	width: fit-content;
+	border-radius: 8px;
+	padding: 8px 16px !important;
+	display: flex;
+	gap: 32px;
+	align-items: center;
+
+	p {
+		margin-bottom: 0;
+	}
+}
+
+.messageInfo {
+	position: fixed;
+	top: 32px;
+	right: 32px;
+}
+
 /* Basic */
 
 	html {

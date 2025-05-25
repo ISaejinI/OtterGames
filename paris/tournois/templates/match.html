@@ -14,9 +14,26 @@
 
         <p>{{ match.loutre1 }} de {{ match.loutre1.village }} affronte {{ match.loutre2.nom }} de {{ match.loutre2.village }} dans un match de {{ tournoi.categorie }}</p>
 
-        <p>{{ message }}</p>
+        {% if message %}
+            <div class="messageResultat messageInfo">
+                <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                    fill="currentColor" viewBox="0 0 24 24" >
+                    <path d="M11 11h2v6h-2zM11 7h2v2h-2z"></path><path d="M12 22c5.51 0 10-4.49 10-10S17.51 2 12 2 2 6.49 2 12s4.49 10 10 10m0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8"></path>
+                </svg>
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
 
         <div>
+            {% if resultat %}
+                <div class="messageResultat">
+                    <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                        fill="currentColor" viewBox="0 0 24 24" >
+                        <path d="M11 11h2v6h-2zM11 7h2v2h-2z"></path><path d="M12 22c5.51 0 10-4.49 10-10S17.51 2 12 2 2 6.49 2 12s4.49 10 10 10m0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8"></path>
+                    </svg>
+                    <p>{{ resultat }}</p>
+                </div>
+            {% endif %}
             <ul>
                 <li>
                     {{ match.loutre1.nom }} {{ match.loutre1.prenom }} de {{ match.loutre1.village }}

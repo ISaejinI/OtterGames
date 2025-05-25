@@ -25,14 +25,26 @@ def tournoi_page(request, tournoi_id):
 def match_page(request, match_id):
     match = Match.objects.get(pk = match_id)
     tournoi = Tournoi.objects.get(pk = match.tournoi_id)
+    message = ''
+    messageResultat = ''
     currentTime = timezone.now()
 
     if currentTime > match.heure_lancement:
         timePassed = True
     else:
         timePassed = False
+    
+    if request.user.is_authenticated:
+        currentBet = Pari.objects.filter(user = request.user, match = match).first()
+        if currentBet:
+            message = "Vous avez déjà parié sur une loutre sur ce match"
 
-    return render(request, 'match.html', {'match': match, 'message':'', 'tournoi': tournoi, 'timePassed':timePassed})
+            if match.vainqueur == currentBet.loutre_misee:
+                messageResultat = "vous avez gagné 10 points"
+            else:
+                messageResultat = "Vous avez perdu"
+
+    return render(request, 'match.html', {'match': match, 'message':message, 'tournoi': tournoi, 'timePassed':timePassed, 'resultat':messageResultat})
 
 
 def register_bet_page(request, tournoi_id, match_id, loutre_id):
@@ -52,12 +64,12 @@ def register_bet_page(request, tournoi_id, match_id, loutre_id):
             message = "Vous avez déjà parié sur une loutre sur ce match"
 
             if currentMatch.vainqueur == currentBet.loutre_misee:
-                messageResultat = "vous avez gagné"
+                messageResultat = "vous avez gagné 10 points"
             else:
                 messageResultat = "Vous avez perdu"
         
         else:
-            if currentMatch.heure_lancement < currentTime:
+            if timePassed:
                 bet = Pari()
 
                 bet.user = request.user
@@ -83,4 +95,4 @@ def register_bet_page(request, tournoi_id, match_id, loutre_id):
     else:
         message = "Il faut être connecté pour parier"
 
-    return render(request, 'match.html', {'match': currentMatch, 'message':message, 'tournoi': tournoi, 'timePassed':timePassed})
+    return render(request, 'match.html', {'match': currentMatch, 'message':message, 'tournoi': tournoi, 'timePassed':timePassed, 'resultat':messageResultat})
