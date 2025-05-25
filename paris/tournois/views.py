@@ -70,7 +70,7 @@ def register_bet_page(request, tournoi_id, match_id, loutre_id):
                 messageResultat = "Vous avez perdu"
         
         else:
-            if timePassed:
+            if not timePassed:
                 bet = Pari()
 
                 bet.user = request.user
