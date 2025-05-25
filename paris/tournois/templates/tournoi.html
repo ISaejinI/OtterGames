@@ -21,14 +21,6 @@
                     </div>
                 </div>
 
-                <p style="text-align: center;"><strong>Vainqueur :</strong>
-                    {% if match.vainqueur %}
-                        {{ match.vainqueur }}
-                    {% else %}
-                        <em>À venir</em>
-                    {% endif %}
-                </p>
-
                 <div style="text-align: center; margin-top: 10px;">
                     <button><a href="{% url 'match' match.pk %}">Voir le match</a></button>
                 </div>
